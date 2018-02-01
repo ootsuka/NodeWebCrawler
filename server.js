@@ -7,14 +7,14 @@ const app = express();
 let server = require('http').Server(app);
 let io = require('socket.io')(server);
 
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
 server.listen(8080, function () {
     console.log('listening on port 8080');
 });
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/build/index.html');
-})
-
-io.on('connection', function (socket) {
-  console.log('a user connected');
-})
+  res.sendFile(__dirname + '/public/index.html');
+});
