@@ -30,7 +30,9 @@ class App extends Component {
   render() {
     const { loading, progress } = this.state
     return (
+
       <div className="App">
+      <h1>Nodejs-LianJia</h1>
         <div>
           <Button onClick={this.handleClick.bind(this)} loading={loading}>
           {progress===''?'Go Crawl Something':progress}

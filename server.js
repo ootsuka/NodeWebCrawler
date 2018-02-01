@@ -22,7 +22,7 @@ server.listen(8080, function () {
 
 //mongoose
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect('mongodb://localhost:27017/loupan');
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -49,20 +49,20 @@ const loupan = mongoose.model('loupan',{
 io.on('connection', (socket) => {
 
     function getPageCount(){
-        console.log('抓取总页数...' + url);
+        console.log('crawling total page...' + url);
         return new Promise(function (resolve, reject) {
             superagent.get(url)
                 .end(function (err, sres) {
                     if (err) {
                         console.log(err);
-                        console.log(`抓取错误，正在重新抓取总页数...`);
+                        console.log(`error, continue crawling total page...`);
                         getCount(1, total);
                         // return reject(err);
                     }
                     if(sres){
                         const $ = cheerio.load(sres.text);
                         total = JSON.parse($('.list-wrap .page-box').attr('page-data')).totalPage;
-                        console.log('页数:' + total);
+                        console.log('page:' + total);
                         resolve(total);
                     }
                 });
@@ -71,12 +71,12 @@ io.on('connection', (socket) => {
 
     function getPageInfo(page){
         const pageUrl = page===1?url:`${url}pg${page}`;
-        console.log('抓取中...' + pageUrl);
+        console.log('crawling...' + pageUrl);
         return new Promise(function (resolve, reject) {
             superagent.get(pageUrl)
                 .end(function (err, sres) {
                     if (err) {
-                        console.log(`抓取错误，正在从失败页(${page})继续...`);
+                        console.log(`error，continue crawling from (${page})...`);
                         getInfo(page, total);
                         // return reject(err);
                     }
@@ -137,7 +137,7 @@ io.on('connection', (socket) => {
             socket.emit('progress', { progress: `finished crawling ${i}page！` });
         }
 
-        console.log('=================== 抓取完成 ===================');
+        console.log('=================== finished ===================');
         socket.emit('progress', { progress: 'finished' });
     }
 

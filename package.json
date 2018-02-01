@@ -5,6 +5,7 @@
   "proxy": "http://localhost:8080/",
   "dependencies": {
     "antd": "^3.1.6",
+    "chart.js": "^2.7.1",
     "cheerio": "^1.0.0-rc.2",
     "mongoose": "^5.0.3",
     "react": "^16.2.0",
