@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Button } from 'antd';
 import './App.css';
 
+const io = require('socket.io-client');
+const socket = io.connect('http://localhost:3000/',{'forceNew':true});
+
 class App extends Component {
   state = {
       loading: false,
@@ -9,17 +12,19 @@ class App extends Component {
   };
 
   handleClick = () => {
-    console.log('Button Clicked');
-    this.setState({
-      loading: true,
-      progress: 'getting there'
-    })
-    setTimeout(function () {
+    console.log('got crawling request');
+    socket.emit('request', 'got crawling request...');
+    socket.on('progress', function (data) {
       this.setState({
-        loading: false,
-        progress: 'Succeeded Crawling Awesome Things'
-      })
-    }.bind(this), 3000)
+        loading: true,
+        progress: data.progress
+      });
+      if (data.progress === 'finished') {
+        this.setState({
+          loading: false
+        })
+      }
+    }.bind(this));
   };
 
   render() {
