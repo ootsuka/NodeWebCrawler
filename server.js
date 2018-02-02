@@ -30,7 +30,7 @@ db.once('open', function () {
     console.log("db connected.")
 });
 
-const url = 'https://nj.fang.lianjia.com/loupan/';
+const url = 'https://cd.fang.lianjia.com/loupan/';
 let total = 0;
 
 //模型

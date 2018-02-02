@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
 import './App.css';
-
+import Chart from './components/Chart.js';
+import Header from './components/Header.js'
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:3000/',{'forceNew':true});
 
@@ -32,11 +33,14 @@ class App extends Component {
     return (
 
       <div className="App">
-      <h1>Nodejs-LianJia</h1>
+      <Header />
         <div>
           <Button onClick={this.handleClick.bind(this)} loading={loading}>
           {progress===''?'Go Crawl Something':progress}
           </Button>
+        </div>
+        <div>
+          <Chart />
         </div>
       </div>
     );
