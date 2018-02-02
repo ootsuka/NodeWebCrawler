@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import {
+  BrowserRouter, Switch, Route, Link
+} from 'react-router-dom'
+import { Layout, Menu, Button } from 'antd';
 import './App.css';
 import Chart from './components/Chart.js';
-import Header from './components/Header.js'
+import routers from './routers/router';
+const { Header, Content, Footer } = Layout;
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:3000/',{'forceNew':true});
 
@@ -31,18 +35,44 @@ class App extends Component {
   render() {
     const { loading, progress } = this.state
     return (
-
-      <div className="App">
-      <Header />
-        <div>
-          <Button onClick={this.handleClick.bind(this)} loading={loading}>
-          {progress===''?'Go Crawl Something':progress}
-          </Button>
-        </div>
-        <div>
-          <Chart />
-        </div>
-      </div>
+      <BrowserRouter>
+         <Layout className="layout">
+           <Header>
+              <h1 style={{float:'left',color:'#fff'}}>
+                  Nodejs Webcrawler LianJia
+              </h1>
+              <Button type="primary" style={{marginLeft:'15px'}} onClick={() => this.handleClick()} loading={loading}>
+                  {progress===''?'Crawl Something':progress}
+              </Button>
+              <Menu
+                   theme="dark"
+                   mode="horizontal"
+                   defaultSelectedKeys={['0']}
+                   style={{ lineHeight: '64px', float:'right'}}
+              >
+               {routers.map(function (route, i) {
+                 return (
+                   <Menu.Item key={i}>
+                      <Link to={route.path}>
+                          {route.name}
+                      </Link>
+                   </Menu.Item>
+                 )
+               })}
+              </Menu>
+           </Header>
+           <Content style={{ padding: '0 50px' }}>
+              <Switch>
+                  {routers.map((route, i) => {
+                    return <Route key={i} exact path={route.path} component={route.component}/>
+                  })}
+              </Switch>
+           </Content>
+           <Footer style={{ textAlign: 'center' }}>
+              Webcrawler-lj ©2018 Created by xiaoxin
+           </Footer>
+         </Layout>
+      </BrowserRouter>
     );
   }
 }

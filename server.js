@@ -154,6 +154,16 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+app.get('/api/show/', function (req, res) {
+  loupan.find({})
+      .exec((err, result) => {
+        if (err) console.log(err);
+        else {
+          res.send(JSON.stringify(result));
+        }
+      });
+});
+
 //设置跨域访问
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

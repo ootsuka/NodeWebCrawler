@@ -2,7 +2,6 @@
   "name": "antd-demo",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080/",
   "dependencies": {
     "antd": "^3.1.6",
     "chart.js": "^2.7.1",
@@ -11,6 +10,7 @@
     "react": "^16.2.0",
     "react-chartjs-2": "^2.7.0",
     "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
     "socketio": "^1.0.0",
     "superagent": "^3.8.2"
@@ -24,5 +24,6 @@
   "devDependencies": {
     "babel-plugin-import": "^1.6.3",
     "react-app-rewired": "^1.4.1"
-  }
+  },
+  "proxy": "http://localhost:8080/"
 }
