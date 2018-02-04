@@ -6,6 +6,7 @@ import { Layout, Menu, Button } from 'antd';
 import './App.css';
 import Chart from './components/Chart.js';
 import routers from './routers/router';
+import history from './routers/history';
 const { Header, Content, Footer } = Layout;
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:3000/',{'forceNew':true});
@@ -35,7 +36,7 @@ class App extends Component {
   render() {
     const { loading, progress } = this.state
     return (
-      <BrowserRouter>
+      <BrowserRouter history={history}>
          <Layout className="layout">
            <Header>
               <h1 style={{float:'left',color:'#fff'}}>
