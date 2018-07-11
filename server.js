@@ -37,11 +37,11 @@ let total = 0;
 const loupan = mongoose.model('loupan',{
     src: String,
     name: String,
-    discount: String,
     where: String,
     area: String,
     tags: [String],
-    types: [String],
+    type: String,
+    status: String,
     price: String,
     href: String
 });
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
                     }
                     if(sres){
                         const $ = cheerio.load(sres.text);
-                        total = JSON.parse($('.list-wrap .page-box').attr('page-data')).totalPage;
+                        total = Math.floor(JSON.parse($('.page-box').attr('data-total-count')) / 10);
                         console.log('page:' + total);
                         resolve(total);
                     }
@@ -83,32 +83,32 @@ io.on('connection', (socket) => {
                     if(sres){
                         const $ = cheerio.load(sres.text);
                         const items = [];
-                        $('.house-lst .pic-panel a').each(function (index, element) {
+                        $('.resblock-list').each(function (index, element) {
                             let tagArr = [];
                             let typeArr = [];
                             const $element = $(element);
-                            const $img = $($('.house-lst .pic-panel img')[index]);
-                            const $info_1 = $($('.house-lst .info-panel .col-1')[index]);
-                            const $info_2 = $($('.house-lst .info-panel .col-2')[index]);
-
-                            $info_1.find('.other span').each(function (i, item) {
-                                tagArr[i] = $(item).text().replace(/(\t)|(\n)|(\s+)/g,'');
+                            const name = $element.find('.resblock-name a').text();
+                            const imageSrc = $element.find('.resblock-img-wrapper img').attr('data-original');
+                            const location = $element.find('.resblock-location a').text();
+                            const area = $element.find('.resblock-location :nth-child(3)').text();
+                            $element.find('.resblock-tag span').each(function (i, item) {
+                              tagArr[i] = $(item).text().replace(/(\t)|(\n)|(\s+)/g,'');
                             });
-
-                            $info_1.find('.type span').each(function (i, item) {
-                                typeArr[i] = $(item).text().replace(/(\t)|(\n)|(\s+)/g,'');
-                            });
-
+                            const type = $element.find('.resblock-type').text();
+                            const status = $element.find('.sale-status').text();
+                            const price = $element.find('.main-price :first-child').text();
+                            const href = $element.find('.resblock-name a').attr('href');
+                            console.log(href);
                             const $eleInfo = {
-                                src: $img.attr('data-original'),
-                                name: $info_1.find('h2 a').text(),
-                                discount: $info_1.find('h2 .redTag .text').text(),
-                                where: $info_1.find('.where .region').text(),
-                                area: $info_1.find('.area').text().replace(/(\t)|(\n)|(\s+)/g,''),
+                                src: imageSrc,
+                                name: name,
+                                where: location,
+                                area: area,
                                 tags: tagArr,
-                                types: typeArr,
-                                price: $info_2.find('.price .average').text().replace(/(\t)|(\n)|(\s+)/g,''),
-                                href: $element.attr('href').split('/')[2]
+                                type: type,
+                                status: status,
+                                price: price,
+                                href: href
                             };
 
                             loupan.create($eleInfo, function (err) {
